@@ -18,74 +18,79 @@ bot = commands.Bot(command_prefix='e!', intents= intents)
 @bot.command()
 async def info(ctx):
     await ctx.send('Hola mundo')
-    
+
 @bot.command()
-async def d4(ctx):
-    dice = random.randrange(1, 5, 1)
-    if dice == 1 or dice == 4:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
-    
+async def rdice(ctx, arg):
+    try:
+        dice = arg.lower()
+        if dice == 'd4':
+            dice = random.randrange(1, 5, 1)
+            if dice == 1 or dice == 4:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        elif dice == 'd6':
+            dice = random.randrange(1, 7, 1)
+            if dice == 1 or dice == 6:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        elif dice == 'd8':
+            dice = random.randrange(1, 9, 1)
+            if dice == 1 or dice == 8:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        elif dice == 'd10':
+            dice = random.randrange(1, 11, 1)
+            if dice == 1 or dice == 10:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        elif dice == 'd12':
+            dice = random.randrange(1, 13, 1)
+            if dice == 1 or dice == 12:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        elif dice == 'd20':
+            dice = random.randrange(1, 21, 1)
+            if dice == 1 or dice == 20:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        elif dice == 'd100':
+            dice = random.randrange(1, 101, 1)
+            if dice == 1 or dice == 100:
+                await ctx.send(f'¡**{dice}**!')
+            else:
+                await ctx.send(f'¡{dice}!')
+        else:
+            await ctx.send('¡Elige un dado! Por ejemplo "d20"')
+    except Exception as e:
+        print("Error: ", e)
+
+@rdice.error
+async def error_type(ctx, error):
+    if isinstance(error, commands.errors.MissingRequiredArgument):
+        await ctx.send('¡Elige un dado! Por ejemplo "d20"')
+
 @bot.command()
-async def d6(ctx):
-    dice = random.randrange(1, 7, 1)
-    if dice == 1 or dice == 6:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
-    
-@bot.command()
-async def d8(ctx):
-    dice = random.randrange(1, 9, 1)
-    if dice == 1 or dice == 8:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
-    
-@bot.command()
-async def d10(ctx):
-    dice = random.randrange(1, 11, 1)
-    if dice == 1 or dice == 10:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
-    
-@bot.command()
-async def d12(ctx):
-    dice = random.randrange(1, 13, 1)
-    if dice == 1 or dice == 12:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
-    
-@bot.command()
-async def d20(ctx):
-    dice = random.randrange(1, 21, 1)
-    if dice == 1 or dice == 20:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
-    
-@bot.command()
-async def d100(ctx):
-    dice = random.randrange(1, 101, 1)
-    if dice == 1 or dice == 100:
-        await ctx.send(f'¡**{dice}**!')
-    else:
-        await ctx.send(f'¡{dice}!')
+async def borrar(ctx, args):
+    try:
+        camtidad = int(args)
+        await ctx.channel.purge(limit=camtidad+1)
+        await ctx.send("Fueron purgados...", delete_after= 3)
+    except:
+        await ctx.send("Error Dx", delete_after= 3)
+
+@borrar.error
+async def error_type(ctx, error):
+    if isinstance(error, commands.errors.MissingRequiredArgument):
+        await ctx.send('¡Tienes que indicar cuantos mensajes!')
 
 @bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
-    if 'ping' in message.content.lower():
-        await message.channel.send(f'pong {message.author.name}')
-    
-    await bot.process_commands(message)
-    
-url = 'https://jsonplaceholder.typicode.com/posts'
-data = {'title': 'foo', 'body': 'bar', 'userId': 1}
-response = requests.post(url, json=data)
+async def on_ready():
+    print(f'Inicio exitoso {bot.user}')
     
 bot.run(token)
