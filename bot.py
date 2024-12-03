@@ -89,6 +89,14 @@ async def error_type(ctx, error):
     if isinstance(error, commands.errors.MissingRequiredArgument):
         await ctx.send('¡Tienes que indicar cuantos mensajes!')
 
+@bot.command()
+async def purga(ctx, user: discord.User):
+    def is_me(m):
+        return m.author == user
+
+    deleted = await ctx.channel.purge(limit=None, check=is_me)
+    await ctx.send(f"Purgué {len(deleted)} mensajes de {user.mention}.")
+    
 @bot.event
 async def on_ready():
     print(f'Inicio exitoso {bot.user}')
